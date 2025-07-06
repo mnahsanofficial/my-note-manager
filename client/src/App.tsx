@@ -1,4 +1,4 @@
-import { Box, ThemeProvider, Typography } from "@mui/material";
+import { Box, CssBaseline, ThemeProvider, Typography } from "@mui/material";
 import { Route, Routes } from "react-router-dom";
 import NotFound from "./pages/NotFound";
 import Dashboard from "./pages/Dashboard";
@@ -8,6 +8,7 @@ import { theme } from "./ui/Theme";
 function App() {
   return (
     <ThemeProvider theme={theme}>
+      <CssBaseline />
     <Routes>
       <Route path="/" element={<AppLayout />}>
         <Route index element={<Dashboard />} />
