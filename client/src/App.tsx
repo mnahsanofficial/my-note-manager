@@ -3,7 +3,8 @@ import { Route, Routes } from "react-router-dom";
 import NotFound from "./pages/NotFound";
 import Dashboard from "./pages/Dashboard";
 import AppLayout from "./components/layout/AppLayout";
-import { theme } from "./ui/Theme";
+import CreateNote from "./pages/CreateNote";
+import { theme } from "./ui/theme";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
     <Routes>
       <Route path="/" element={<AppLayout />}>
         <Route index element={<Dashboard />} />
+        <Route path="/notes/new" element={<CreateNote />} />
         <Route
           path="bookmarks"
           element={
