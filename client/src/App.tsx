@@ -1,11 +1,13 @@
-import { Box, Typography } from "@mui/material";
+import { Box, ThemeProvider, Typography } from "@mui/material";
 import { Route, Routes } from "react-router-dom";
 import NotFound from "./pages/NotFound";
 import Dashboard from "./pages/Dashboard";
 import AppLayout from "./components/layout/AppLayout";
+import { theme } from "./ui/Theme";
 
 function App() {
   return (
+    <ThemeProvider theme={theme}>
     <Routes>
       <Route path="/" element={<AppLayout />}>
         <Route index element={<Dashboard />} />
@@ -36,6 +38,7 @@ function App() {
       </Route>
       <Route path="*" element={<NotFound />} />
     </Routes>
+    </ThemeProvider>
   );
 }
 
