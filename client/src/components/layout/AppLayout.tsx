@@ -1,16 +1,115 @@
-import { AppBar, Avatar, Box, Drawer, IconButton, Toolbar, Tooltip, Typography } from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
-import { Outlet } from "react-router-dom";
+import { AppBar, Avatar, Box, Divider, Drawer, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Toolbar, Tooltip, Typography } from "@mui/material";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 const DRAWER_WIDTH = 280;
 
 import React from "react";
+import { ArchiveIcon, BookmarkIcon, DashboardIcon, MenuIcon, NoteIcon, SettingsIcon } from "../../ui/icons";
 
 export default function AppLayout() {
+    const navigate = useNavigate();
+  const location = useLocation();
+
+  const navigationItems = [
+    {
+      text: "Dashboard",
+      icon: <DashboardIcon />,
+      path: "/",
+      badge: null,
+    },
+    {
+      text: "Bookmarks",
+      icon: <BookmarkIcon />,
+      path: "/bookmarks",
+      badge: null,
+    },
+    {
+      text: "Archive",
+      icon: <ArchiveIcon />,
+      path: "/archive",
+      badge: null,
+    },
+  ];
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
   };
+  const renderMenus = () => (
+    <Box sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
+      <Box sx={{ p: 2, display: "flex", alignItems: "center", gap: 1 }}>
+        <Avatar sx={{ bgcolor: "primary.main", width: 32, height: 32 }}>
+          <NoteIcon sx={{ fontSize: 20 }} />
+        </Avatar>
+        <Typography variant="h6" fontWeight="bold">
+          Note Manager
+        </Typography>
+      </Box>
+
+      <Divider />
+
+      {/* Navigation Items */}
+      <List sx={{ flex: 1, px: 1 }}>
+        {navigationItems.map((item) => (
+          <ListItem key={item.text} disablePadding>
+            <ListItemButton
+              selected={location.pathname === item.path}
+              onClick={() => navigate(item.path)}
+              sx={{
+                borderRadius: 2,
+                mb: 0.5,
+                "&.Mui-selected": {
+                  bgcolor: "primary.light",
+                  color: "primary.contrastText",
+                  "&:hover": {
+                    bgcolor: "primary.main",
+                  },
+                },
+              }}
+            >
+              <ListItemIcon
+                sx={{
+                  color:
+                    location.pathname === item.path
+                      ? "inherit"
+                      : "text.secondary",
+                  minWidth: 40,
+                }}
+              >
+                {item.icon}
+              </ListItemIcon>
+              <ListItemText
+                primary={item.text}
+                primaryTypographyProps={{
+                  fontSize: "0.875rem",
+                  fontWeight: location.pathname === item.path ? 600 : 400,
+                }}
+              />
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
+
+      <Divider />
+
+      {/* Settings */}
+      <List sx={{ px: 1, pb: 2 }}>
+        <ListItem disablePadding>
+          <ListItemButton
+            onClick={() => navigate("/settings")}
+            sx={{ borderRadius: 2 }}
+          >
+            <ListItemIcon sx={{ minWidth: 40 }}>
+              <SettingsIcon />
+            </ListItemIcon>
+            <ListItemText
+              primary="Settings"
+              primaryTypographyProps={{ fontSize: "0.875rem" }}
+            />
+          </ListItemButton>
+        </ListItem>
+      </List>
+    </Box>
+  );
 
   return (
     <Box sx={{ display: "flex", minHeight: "100vh" }}>
@@ -27,7 +126,12 @@ export default function AppLayout() {
         }}
       >
         <Toolbar>
-          <IconButton sx={{ mr: 2, display: { md: "none" } }}>
+          <IconButton
+            sx={{ mr: 2, display: { md: "none" } }}
+            onClick={handleDrawerToggle}
+            aria-label="open drawer"
+            edge="start"
+          >
             <MenuIcon />
           </IconButton>
 
@@ -63,7 +167,7 @@ export default function AppLayout() {
               width: DRAWER_WIDTH,
             },
           }}
-        ></Drawer>
+        >{renderMenus()}</Drawer>
 
         {/* Desktop drawer */}
         <Drawer
@@ -79,20 +183,7 @@ export default function AppLayout() {
           }}
           open
         >
-            <Toolbar /> {/* Spacer for fixed app bar */}
-            <Box sx={{ overflow: "auto" }}>
-                {/* Navigation links will go here */}
-                <Typography variant="h6" sx={{ p: 2 }}>
-                Navigation
-                </Typography>
-                {/* Example links */}
-                <Box sx={{ p: 2 }}>
-                <Typography variant="body1">Dashboard</Typography>
-                <Typography variant="body1">Bookmarks</Typography>
-                <Typography variant="body1">Archive</Typography>
-                <Typography variant="body1">Settings</Typography>
-                </Box>
-            </Box>
+            {renderMenus()}
         </Drawer>
       </Box>
 
